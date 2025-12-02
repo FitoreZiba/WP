@@ -4,7 +4,6 @@ import mk.ukim.finki.wp.lab2.model.Author;
 
 import java.util.List;
 
-public interface AuthorService  {
+public interface AuthorService {
     List<Author> findAll();
-
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="utf-8">
     <title>Book Reservation - Welcome and choose a Book</title>
     <style type="text/css">
         body {
@@ -38,53 +39,61 @@
         <li th:each="lastViewedBook : ${lastViewedBooks}" th:text="${lastViewedBook}"></li>
     </ul>
     <form action="/books" method="GET">
-        <h2>Filter books:</h2>
-
-        <label>Name:</label>
-        <input type="text" name="filterName" required/>
+        <h2>Filter books by author:</h2>
+        <select name="filterAuthorId" required>
+            <option value="-1" th:selected="${filteredId == -1}">None</option>
+            <option th:each="author : ${authors}" th:value="${author.getId()}"
+                    th:text="${author.getName()} + ' ' + ${author.getSurname()}"
+                    th:selected="${filteredId == author.getId()}"></option>
+        </select>
         <br />
-
-        <label>Minimum rating:</label>
-        <input type="number" name="filterRating" step=".01" min="0" value="0" required />
-        <br />
-
         <button type="submit">Filter</button>
     </form>
+
     <form action="/bookReservation" method="POST">
         <h2>Choose a book:</h2>
 
         <div th:each="book : ${books}">
             <div class="book-entry">
-                <!--    <input type="radio" class="book-option" name="bookTitle" th:value="${book.getTitle()}"-->
+                    <div class="book-entry">
+                        <label>
+                            <input type="radio" class="book-option"
+                                   name="bookTitle"
+                                   th:value="${book.title}" />
 
-                   <input type="checkbox" class="book-option" name="bookTitle" th:value="${book.getTitle()}"
-                          th:text="'Title: ' + ${book.getTitle()} + ', Genre: ' + ${book.getGenre()} + ', Rating: ' + ${book.getAverageRating()} + ', Author: ' + ${book.getAuthor().getName()} + ' ' + ${book.getAuthor().getSurname()}" />
+                            <span th:text="'Title: ' + ${book.title}
+                         + ', Genre: ' + ${book.genre}
+                         + ', Rating: ' + ${book.averageRating}
+                         + ', Author: ' + ${book.author.name} + ' ' + ${book.author.surname}">
+            </span>
+                        </label>
 
-                   <button type="submit" name="edit" th:formaction="@{'/books/book-form/' + ${book.getId()}}" formmethod="get" formnovalidate>
-                       Edit
-                   </button>
+                        <button type="submit"
+                                th:formaction="@{'/books/book-form/' + ${book.id}}"
+                                formmethod="get" formnovalidate>Edit</button>
 
-                   <button type="submit" name="delete" th:formaction="@{'/books/delete/' + ${book.getId()}}" formmethod="post" formnovalidate>
-                       Delete
-                   </button>
-               </div>
-           </div>
+                        <button type="submit"
+                                th:formaction="@{'/books/delete/' + ${book.id}}"
+                                formmethod="post" formnovalidate>Delete</button>
+                    </div>
+                </div>
+        </div>
 
-           <button type="submit" name="addBook" formaction="/books/book-form" formmethod="get" formnovalidate>
-               Add Book
-           </button>
+        <button type="submit" name="addBook" formaction="/books/book-form" formmethod="get" formnovalidate>
+            Add Book
+        </button>
 
-           <h2>Enter your information:</h2>
-           <label>Your Name:</label>
-           <input type="text" name="readerName" required><br/>
-           <label>Your Address:</label>
-           <input type="text" name="readerAddress" required><br/>
+        <h2>Enter your information:</h2>
+        <label>Your Name:</label>
+        <input type="text" name="readerName" required><br/>
+        <label>Your Address:</label>
+        <input type="text" name="readerAddress" required><br/>
 
-           <h2>Choose number of copies:</h2>
-           <input type="number" name="numCopies" min="1" max="10" required><br/>
-           <br/>
-           <input type="submit" value="Reserve Book">
-       </form>
-   </main>
-   </body>
-   </html>
+        <h2>Choose number of copies:</h2>
+        <input type="number" name="numCopies" min="1" max="10" required><br/>
+        <br/>
+        <input type="submit" value="Reserve Book">
+    </form>
+</main>
+</body>
+</html>

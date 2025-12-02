@@ -1,6 +1,7 @@
 package mk.ukim.finki.wp.lab2.web.controller;
 
 import jakarta.servlet.http.HttpSession;
+import mk.ukim.finki.wp.lab2.model.Author;
 import mk.ukim.finki.wp.lab2.model.Book;
 import mk.ukim.finki.wp.lab2.service.AuthorService;
 import mk.ukim.finki.wp.lab2.service.BookService;
@@ -16,16 +17,17 @@ import java.util.List;
 @RequestMapping("/books")
 public class BookController {
     private final BookService bookService;
+    private final AuthorService authorService;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, AuthorService authorService) {
         this.bookService = bookService;
+        this.authorService = authorService;
     }
 
     @GetMapping
     @SuppressWarnings("unchecked")
     public String getBooksPage(@RequestParam(required = false) String error,
-                               @RequestParam(required = false) String filterName,
-                               @RequestParam(required = false) String filterRating,
+                               @RequestParam(required = false) String filterAuthorId,
                                Model model,
                                HttpSession session
     ) {
@@ -35,27 +37,30 @@ public class BookController {
 
         List<Book> books;
         List<String> lastViewed = (List<String>) session.getAttribute("lastViewed");
-        double averageRating = -1;
 
+        long authorId = -1L;
         try {
-            averageRating = Double.parseDouble(filterRating);
-        } catch (Exception e) {
+            authorId = Long.parseLong(filterAuthorId);
+        } catch(Exception e) {
             System.out.println(e.getMessage());
         }
 
-        if(filterName != null && averageRating != -1) {
-            books = bookService.searchBooks(filterName, averageRating);
+        if(authorId != -1) {
+            books = bookService.findBooksByAuthorId(authorId);
         } else {
             books = bookService.listAll();
         }
 
         model.addAttribute("books", books);
         model.addAttribute("lastViewedBooks", lastViewed);
+        model.addAttribute("authors", authorService.findAll());
+        model.addAttribute("filteredId", authorId);
         return "listBooks";
     }
 
     @GetMapping("/book-form")
     public String getAddBookPage(Model model) {
+        model.addAttribute("authors", authorService.findAll());
         return "book-form";
     }
 
@@ -80,7 +85,9 @@ public class BookController {
         model.addAttribute("title", book.getTitle());
         model.addAttribute("genre", book.getGenre());
         model.addAttribute("averageRating", book.getAverageRating());
-        model.addAttribute("authorId", book.getAuthor().getId());
+        Author author = book.getAuthor();
+        model.addAttribute("authorId", author != null ? author.getId() : -1);
+        model.addAttribute("authors", authorService.findAll());
         return "book-form";
     }
 

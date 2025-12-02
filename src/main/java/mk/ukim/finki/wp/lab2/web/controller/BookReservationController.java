@@ -3,7 +3,6 @@ package mk.ukim.finki.wp.lab2.web.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import mk.ukim.finki.wp.lab2.model.BookReservation;
 import mk.ukim.finki.wp.lab2.service.BookReservationService;
-import mk.ukim.finki.wp.lab2.service.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

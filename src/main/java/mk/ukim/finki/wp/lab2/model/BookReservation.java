@@ -18,35 +18,5 @@ public class BookReservation {
         this.numberOfCopies = numberOfCopies;
     }
 
-    public String getBookTitle() {
-        return bookTitle;
-    }
 
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
-    }
-
-    public String getReaderName() {
-        return readerName;
-    }
-
-    public void setReaderName(String readerName) {
-        this.readerName = readerName;
-    }
-
-    public String getReaderAddress() {
-        return readerAddress;
-    }
-
-    public void setReaderAddress(String readerAddress) {
-        this.readerAddress = readerAddress;
-    }
-
-    public int getNumberOfCopies() {
-        return numberOfCopies;
-    }
-
-    public void setNumberOfCopies(int numberOfCopies) {
-        this.numberOfCopies = numberOfCopies;
-    }
 }
